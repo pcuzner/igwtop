@@ -1,0 +1,33 @@
+
+- change the interface to have a reset method that resets the terminal object ... DONE
+- exit main loop through ctrl-c or 'q' key press ... DONE
+- add the logic to read the lrbd.conf object to determine the gateway nodes, clients rbd/images
+- get the num cpus at the start of the pcpextract class
+- add ncurses interface
+  - allow column sorting
+  - support window resize
+- add quiet mode so tool can be run in the background writing to a log file.
+  file can then be interpreted by ELK, Splunk etc
+- error handling when a node goes down during a run
+- define setup.py!
+- documentation - README and a README.MD!
+- add logging
+- add debug verbosity
+- add start up cli parameters
+  -i ... refresh interval ... DONE
+  -d ... debug PENDING
+
+
+Known BUGS
+- summarize process currently assumes all threads are at the same timestamp for aggregation
+- if a pmcd instance goes down during the run you get an error(pmFetch: IPC protocol failure
+), reported but the tool continues - no indication to gateway count at all.
+
+
+Assumptions
+1. rbdX on node A is also rbdX on node B - if this is invalid, stats correlation breaks
+
+
+
+
+

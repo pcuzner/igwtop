@@ -1,0 +1,6 @@
+# Ignore files
+#
+*.pyc
+*.pyo
+*~
+.idea/*
