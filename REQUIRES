@@ -1,0 +1,5 @@
+Software Pre-reqs
+- Each gateway needs to have pcp installed, and have the pmcd daemon running.
+
+Firewall
+- igwtop connects to the pmcd port(44321) on each gateway host
