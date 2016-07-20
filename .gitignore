@@ -4,3 +4,4 @@
 *.pyo
 *~
 .idea/*
+.idea/.*
