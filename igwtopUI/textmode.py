@@ -17,25 +17,18 @@ class TextMode(threading.Thread):
         self.pcp_collectors = pcp_threads
         self.terminal = None
 
-    # def show_values(self):
-    #     # provide indication of progress when testing
-    #     for collector in self.pcp_collectors:
-    #         if len(collector.metrics.disk_stats) > 0:
-    #             print collector.metrics.timestamp
-    #             #print collector.metrics.disk_stats['sda']
-    #             print("CPU Busy: %d Free:%d" % (collector.metrics.cpu_busy_pct,
-    #                                             collector.metrics.cpu_idle_pct))
-    #             print "Network in: %d out: %d" % (collector.metrics.nic_bytes['in'],
-    #                                               collector.metrics.nic_bytes['out'])
-
     def show_stats(self, gw_stats, disk_summary):
+        num_gws = len(gw_stats.cpu_busy)
+        desc = "Gateways" if num_gws > 1 else "Gateway"
 
-        print("Gateways:{:>2}    CPU% MIN:{:>3.0f} MAX:{:>3.0f}    Network Total In:{:>6.0f} Out:{:>6.0f}".format(
-              len(gw_stats.cpu_busy),
+        print("igwtop  {:>2} {:<8} CPU% MIN:{:>3.0f} MAX:{:>3.0f}    Network Total In:{:>6} Out:{:>6}   {}".format(
+              num_gws,
+              desc,
               gw_stats.min_cpu,
               gw_stats.max_cpu,
-              gw_stats.total_net_in,
-              gw_stats.total_net_out))
+              bytes2human(gw_stats.total_net_in),
+              bytes2human(gw_stats.total_net_out),
+              gw_stats.timestamp))
 
         print "Capacity: {:>5}    IOPS: {:>5}".format(bytes2human(gw_stats.total_capacity), gw_stats.total_iops)
 

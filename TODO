@@ -16,6 +16,8 @@
 - add start up cli parameters
   -i ... refresh interval ... DONE
   -d ... debug PENDING
+  -p ... rbd pool name containing lrbd.conf (default = rbd)
+
 
 
 Known BUGS

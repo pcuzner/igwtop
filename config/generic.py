@@ -18,6 +18,7 @@ class HostSummary(object):
         self.cpu_busy = []
         self.net_in = []
         self.net_out = []
+        self.timestamp = ''
         self.total_capacity = 0
         self.total_iops = 0
 

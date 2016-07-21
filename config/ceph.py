@@ -5,4 +5,4 @@
 
 def get_gateways():
     # get list of gateways from the lrbd.conf object
-    return ['localhost', 'eric']
+    return ['localhost'] # , 'eric']
