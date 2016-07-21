@@ -6,20 +6,20 @@ import time
 from collectors.pcp_provider import PCPcollector
 from config.generic import Config
 from config.local import get_device_info
-from config.ceph import get_gateways
+from config.ceph import get_gateway_info
 from igwtopUI.textmode import TextMode
 
 
 def main():
 
     config = Config()
-    config.gateway_list = get_gateways()
+    config.gateway_config = get_gateway_info(opts)
     config.device_info = get_device_info()
     config.sample_interval = opts.interval
     collector_threads = []
 
     # NB. interval must be a string, defaulting to 1 for testing
-    for gw in config.gateway_list:
+    for gw in config.gateway_config.gateways:
         collector = PCPcollector(host=gw, interval=config.sample_interval)
 
         if collector.connected:
@@ -58,6 +58,8 @@ def get_options():
     parser.add_argument('-m', '--mode', type=str, default='text',
                         choices=(['text']),
                         help='output mode')
+    parser.add_argument('-t', '--test', action='store_true', default=True,
+                        help='run in test mode - i.e. without rados interaction')
     parser.add_argument('-v', '--version', action='version', version='%(prog)s 0.5')
     opts = parser.parse_args()
     return opts

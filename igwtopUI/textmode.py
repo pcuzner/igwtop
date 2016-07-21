@@ -30,12 +30,22 @@ class TextMode(threading.Thread):
               bytes2human(gw_stats.total_net_out),
               gw_stats.timestamp))
 
-        print "Capacity: {:>5}    IOPS: {:>5}".format(bytes2human(gw_stats.total_capacity), gw_stats.total_iops)
+        print("Capacity: {:>5}    IOPS: {:>5}   Clients:{:>3}".format(
+              bytes2human(gw_stats.total_capacity),
+              gw_stats.total_iops,
+              self.config.gateway_config.client_count))
 
-        print "Device   Size     r/s     w/s    rMB/s     wMB/s    await  r_await  w_await"
+        print "Device   Size     r/s     w/s    rMB/s     wMB/s    await  r_await  w_await  Client"
 
         for devname in disk_summary:
-            print("{:^6}   {:>4}   {:>5}   {:>5}   {:>6.2f}    {:>6.2f}   {:>6.2f}   {:>6.2f}   {:>6.2f}".format(
+
+            if devname in self.config.gateway_config.diskmap:
+                client = self.config.gateway_config.diskmap[devname]
+            else:
+                client = 'Unknown'
+
+            print("{:^6}   {:>4}   {:>5}   {:>5}   {:>6.2f}    {:>6.2f}   {:>6.2f}   {:>6.2f}   "
+                  "{:>6.2f}  {:<20}".format(
                    devname,
                    bytes2human(disk_summary[devname].disk_size),
                    int(disk_summary[devname].tot_reads),
@@ -44,7 +54,8 @@ class TextMode(threading.Thread):
                    disk_summary[devname].tot_writekb/1024,
                    disk_summary[devname].max_await,
                    disk_summary[devname].max_r_await,
-                   disk_summary[devname].max_w_await))
+                   disk_summary[devname].max_w_await,
+                   client))
         print
 
 

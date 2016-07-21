@@ -13,7 +13,7 @@ def get_device_info():
     """
     device_blacklist = ['sr0']
     device_data = {}
-    lsblk_out = subprocess.check_output('lsblk -d -S -b -J -o NAME,SIZE,ROTA,HCTL,TYPE',shell=True)
+    lsblk_out = subprocess.check_output('lsblk -d -S -b -J -o NAME,SIZE,ROTA,TYPE', shell=True)
     blk_data = json.loads(lsblk_out)
 
     for dev_dict in blk_data['blockdevices']:
@@ -23,7 +23,7 @@ def get_device_info():
         del dev_dict['name']
         device_data[dev_name] = dev_dict
 
-    print "Device info:"
-    print str(device_data)
+    # print "Device info:"
+    # print str(device_data)
 
     return device_data

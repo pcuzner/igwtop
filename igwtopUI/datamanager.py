@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 __author__ = 'paul'
 
+from time import localtime,strftime
+
 from config.generic import DiskSummary, HostSummary
+
 
 def summarize(config, pcp_threads):
     dev_stats = {}
@@ -51,10 +54,17 @@ def summarize(config, pcp_threads):
     gw_stats.min_cpu = min(gw_stats.cpu_busy)
     gw_stats.max_cpu = max(gw_stats.cpu_busy)
 
-    if len(timestamps) == 1:
+    num_timestamps = len(timestamps)
+    if num_timestamps == 0:
+        # first iteration - just use the current time stamp
+        gw_stats.timestamp = 'NO DATA'
+        # gw_stats.timestamp = strftime('%X',localtime())
+    elif num_timestamps == 1:
+        # all timestamps from threads are in sync
         dt_parts = str(list(timestamps)[0]).split()
         gw_stats.timestamp = dt_parts[3]
     else:
+        # FIXME - likely data issue, since timestamps across threads are different
         gw_stats.timestamp = "Time Skew"
 
     return gw_stats, dev_stats
