@@ -12,10 +12,10 @@ def summarize(config, pcp_threads):
     gw_stats = HostSummary()
     first_pass = True
 
-    for dev in config.device_info:
+    for dev in config.devices:
 
         summary = DiskSummary()
-        summary.disk_size = config.device_info[dev]['size']
+        summary.disk_size = config.devices[dev]['size']
 
         for collector in pcp_threads:
 

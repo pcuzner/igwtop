@@ -13,8 +13,8 @@ from igwtopUI.textmode import TextMode
 def main():
 
     config = Config()
-    config.gateway_config = get_gateway_info(opts)
-    config.device_info = get_device_info()
+    config.devices = get_device_info()
+    config.gateway_config = get_gateway_info(opts, config.devices)
     config.sample_interval = opts.interval
     collector_threads = []
 

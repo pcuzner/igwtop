@@ -2,17 +2,16 @@
 
 # get the lrbd.conf object and parse it
 # returning the object to the caller
-
-from config.generic import Config
+import random
 
 class GatewayConfig(object):
     """ Configuration of the gateways, based on current state
     """
-    def __init__(self, runtime_opts):
+    def __init__(self, runtime_opts, devices):
 
         if runtime_opts.test:
             self.gateways = ['localhost']
-            self.diskmap = {'sda': 'client-2', 'sdb': 'client-1', 'sdc': 'client-3', 'sdd': 'client-4'}
+            self.diskmap = self._disk2client_mangler(devices)
         else:
             self._read_conf()
 
@@ -22,6 +21,16 @@ class GatewayConfig(object):
         self.gateways = []
         self.diskmap = {}
 
+    def _disk2client_mangler(self, devices):
+        map = {}
+        client_pfx = 'client-'
+        client_sfx = random.sample(xrange(len(devices)*10), len(devices))
+        ptr = 0
+        for devname in devices:
+            map[devname] = client_pfx + str(client_sfx[ptr])
+            ptr += 1
+
+        return map
 
     def _unique_clients(self):
         return len(set(self.diskmap.values()))
@@ -30,8 +39,8 @@ class GatewayConfig(object):
         pass
 
 
-def get_gateway_info(opts):
+def get_gateway_info(opts, devices):
 
-    config = GatewayConfig(opts)
+    config = GatewayConfig(opts, devices)
 
     return config
