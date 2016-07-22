@@ -34,6 +34,7 @@ def summarize(config, pcp_threads):
                 gw_stats.net_out.append(collector.metrics.nic_bytes['out'])
                 if collector.metrics.timestamp is not None:
                     timestamps.add(collector.metrics.timestamp)
+                    print "{} {}".format(collector.hostname,collector.metrics.timestamp)
 
         first_pass = False
 
@@ -56,6 +57,7 @@ def summarize(config, pcp_threads):
 
     num_timestamps = len(timestamps)
     if num_timestamps == 0:
+        print num_timestamps
         # first iteration - just use the current time stamp
         gw_stats.timestamp = 'NO DATA'
         # gw_stats.timestamp = strftime('%X',localtime())

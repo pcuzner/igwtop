@@ -10,7 +10,7 @@ class GatewayConfig(object):
     def __init__(self, runtime_opts, devices):
 
         if runtime_opts.test:
-            self.gateways = ['localhost']
+            self.gateways = ['localhost','eric']
             self.diskmap = self._disk2client_mangler(devices)
         else:
             self._read_conf()

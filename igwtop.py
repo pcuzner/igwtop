@@ -2,6 +2,7 @@
 
 import argparse
 import time
+from threading import Event
 
 from collectors.pcp_provider import PCPcollector
 from config.generic import Config
@@ -17,10 +18,12 @@ def main():
     config.gateway_config = get_gateway_info(opts, config.devices)
     config.sample_interval = opts.interval
     collector_threads = []
+    sync_point = Event()
+    sync_point.clear()
 
     # NB. interval must be a string, defaulting to 1 for testing
     for gw in config.gateway_config.gateways:
-        collector = PCPcollector(host=gw, interval=config.sample_interval)
+        collector = PCPcollector(sync_point, host=gw, interval=config.sample_interval)
 
         if collector.connected:
             collector.daemon = True
@@ -33,6 +36,8 @@ def main():
     # Continue as long as we have at least 1 collector connected to a host's pmcd
     if len(collector_threads) > 0:
 
+        sync_point.set()
+
         if opts.mode == 'text':
             interface = TextMode(config, collector_threads)
             interface.daemon = True
@@ -42,7 +47,7 @@ def main():
         try:
             # wait until the interface thread exits
             while interface.isAlive():
-                time.sleep(0.5)
+                time.sleep(0.2)
         except KeyboardInterrupt:
             # reset the terminal settings
             interface.reset()

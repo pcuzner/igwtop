@@ -140,8 +140,6 @@ class PCPextract(pmcc.MetricGroupPrinter):
                 tot_wios = (float)(c_w[inst] - p_w[inst])
                 tot_ios = (float)(tot_rios + tot_wios)
 
-                # await = r_await = w_await = 0.0
-
                 self.metrics.disk_stats[inst].await = (((c_ractive[inst] - p_ractive[inst]) +
                                                        (c_wactive[inst] - p_wactive[inst]))
                                                        / tot_ios) if tot_ios else 0.0
@@ -163,18 +161,13 @@ class PCPcollector(threading.Thread):
     """ Parent thread object which runs an instance of the pcp metric
         collector for a given host
     """
-    def __init__(self, host='', interval='1'):
+    def __init__(self, sync_event, host='', interval='1'):
         threading.Thread.__init__(self)
         self.hostname = host
-
-        # self.metrics = {}
-        # self.metrics['iostat'] = IOSTAT_METRICS
-        # self.metrics['cpu'] = CPU_METRICS           # not used yet
-        # self.metrics['network'] = NETWORK_METRICS   # not used yet
+        self.start_me_up = sync_event
 
         opts = IOstatOptions(host)
         self.context = None
-        #self.interval = pmapi.timeval()
 
         # The manager object builds it's options from the command line
         # parameters, so we simulate that with a list
@@ -197,7 +190,8 @@ class PCPcollector(threading.Thread):
     def run(self):
         # grab the data and store in dict every second
         print "DEBUG - pcp manager thread started"
-        # try:
+
+        self.start_me_up.wait()
         self.manager.run()
 
     def get_values(self):
