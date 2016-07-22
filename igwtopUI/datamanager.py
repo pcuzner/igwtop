@@ -34,7 +34,6 @@ def summarize(config, pcp_threads):
                 gw_stats.net_out.append(collector.metrics.nic_bytes['out'])
                 if collector.metrics.timestamp is not None:
                     timestamps.add(collector.metrics.timestamp)
-                    print "{} {}".format(collector.hostname,collector.metrics.timestamp)
 
         first_pass = False
 
