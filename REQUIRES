@@ -1,5 +1,8 @@
-Software Pre-reqs
-- Each gateway needs to have pcp installed, and have the pmcd daemon running.
 
-Firewall
-- igwtop connects to the pmcd port(44321) on each gateway host
+Requirements
+1. each host must have it's clock sync'd with an ntp provider (for sample synchronisation)
+2. each gateway host must have performance co-pilot installed, and the pmcd.service enabled/started
+3. port 44321 on each gateway host must be open for pmcd api queries
+
+
+

@@ -56,7 +56,7 @@ def summarize(config, pcp_threads):
 
     num_timestamps = len(timestamps)
     if num_timestamps == 0:
-        print num_timestamps
+        # print num_timestamps
         # first iteration - just use the current time stamp
         gw_stats.timestamp = 'NO DATA'
         # gw_stats.timestamp = strftime('%X',localtime())
