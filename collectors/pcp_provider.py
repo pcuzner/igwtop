@@ -8,9 +8,12 @@ from config.generic import DiskMetrics, GatewayMetrics
 
 
 # group metrics
-IOSTAT_METRICS = ['disk.dev.read', 'disk.dev.read_bytes',
-                  'disk.dev.write', 'disk.dev.write_bytes',
-                  'disk.dev.read_rawactive', 'disk.dev.write_rawactive']
+# IOSTAT_METRICS = ['disk.dev.read', 'disk.dev.read_bytes',
+#                   'disk.dev.write', 'disk.dev.write_bytes',
+#                   'disk.dev.read_rawactive', 'disk.dev.write_rawactive']
+IOSTAT_METRICS = ['disk.partitions.read', 'disk.partitions.read_bytes',
+                  'disk.partitions.write', 'disk.partitions.write_bytes',
+                  'disk.partitions.read_rawactive', 'disk.partitions.write_rawactive']
 
 # other metrics that could be useful
 #                  'disk.dev.read_rawactive', 'disk.dev.write_rawactive', 'disk.dev.avactive'
@@ -57,17 +60,17 @@ class PCPextract(pmcc.MetricGroupPrinter):
         return dict(map(lambda x: (x[1], x[2]), group[name].netPrevValues))
 
     def report(self, manager):
-        subtree = 'disk.dev'
+        subtree = 'disk.partitions'
 
         # print "DEBUG - in report function"
 
         group = manager["gateways"]
 
         nic_list = self.instlist(group, 'network.interface.in.bytes')
-        instlist = self.instlist(group, 'disk.dev.read')    # just use reads to get instances
+        instlist = self.instlist(group, subtree + '.read')    # just use reads to get instances
         # print "DEBUG - devices found %s " % instlist
 
-        if group['disk.dev.read'].netPrevValues is None:
+        if group[subtree + '.read'].netPrevValues is None:
             # need two fetches for the cur/prev deltas to work
             return
 
