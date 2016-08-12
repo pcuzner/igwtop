@@ -14,6 +14,7 @@ from igwtopUI.textmode import TextMode
 def main():
 
     config = Config()
+    config.opts = opts
     config.devices = get_device_info()
     config.gateway_config = get_gateway_info(opts, config.devices)
     config.sample_interval = opts.interval

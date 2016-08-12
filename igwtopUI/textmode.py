@@ -21,21 +21,21 @@ class TextMode(threading.Thread):
         num_gws = len(gw_stats.cpu_busy)
         desc = "Gateways" if num_gws > 1 else "Gateway"
 
-        print("igwtop  {:>2} {:<8} CPU% MIN:{:>3.0f} MAX:{:>3.0f}    Network Total In:{:>6} Out:{:>6}   {}".format(
-              num_gws,
-              desc,
-              gw_stats.min_cpu,
-              gw_stats.max_cpu,
-              bytes2human(gw_stats.total_net_in),
-              bytes2human(gw_stats.total_net_out),
-              gw_stats.timestamp))
+        print("igwtop  {:>2} {:<8}   CPU% MIN:{:>3.0f} MAX:{:>3.0f}    Network Total In:{:>6}"
+              "  Out:{:>6}   {}".format(num_gws,
+                                        desc,
+                                        gw_stats.min_cpu,
+                                        gw_stats.max_cpu,
+                                        bytes2human(gw_stats.total_net_in),
+                                        bytes2human(gw_stats.total_net_out),
+                                        gw_stats.timestamp))
 
         print("Capacity: {:>5}    IOPS: {:>5}   Clients:{:>3}".format(
               bytes2human(gw_stats.total_capacity),
               gw_stats.total_iops,
               self.config.gateway_config.client_count))
 
-        print "Device   Size     r/s     w/s    rMB/s     wMB/s    await  r_await  w_await  Client"
+        print "Device   Pool/Image        Size     r/s     w/s    rMB/s     wMB/s    await  r_await  w_await  Client"
 
         for devname in disk_summary:
 
@@ -44,18 +44,18 @@ class TextMode(threading.Thread):
             else:
                 client = 'Unknown'
 
-            print("{:^6}   {:>4}   {:>5}   {:>5}   {:>6.2f}    {:>6.2f}   {:>6.2f}   {:>6.2f}   "
-                  "{:>6.2f}  {:<20}".format(
-                   devname,
-                   bytes2human(disk_summary[devname].disk_size),
-                   int(disk_summary[devname].tot_reads),
-                   int(disk_summary[devname].tot_writes),
-                   disk_summary[devname].tot_readkb/1024,
-                   disk_summary[devname].tot_writekb/1024,
-                   disk_summary[devname].max_await,
-                   disk_summary[devname].max_r_await,
-                   disk_summary[devname].max_w_await,
-                   client))
+            print("{:^6}  {:<16}   {:>4}   {:>5}   {:>5}   {:>6.2f}    {:>6.2f}   {:>6.2f}   {:>6.2f}   "
+                  "{:>6.2f}  {:<20}".format(devname,
+                                            disk_summary[devname].pool_image,
+                                            bytes2human(disk_summary[devname].disk_size),
+                                            int(disk_summary[devname].tot_reads),
+                                            int(disk_summary[devname].tot_writes),
+                                            disk_summary[devname].tot_readkb/1024,
+                                            disk_summary[devname].tot_writekb/1024,
+                                            disk_summary[devname].max_await,
+                                            disk_summary[devname].max_r_await,
+                                            disk_summary[devname].max_w_await,
+                                            client))
         print
 
 

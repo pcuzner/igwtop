@@ -16,6 +16,7 @@ def summarize(config, pcp_threads):
 
         summary = DiskSummary()
         summary.disk_size = config.devices[dev]['size']
+        summary.pool_image = config.devices[dev]['pool-image']
 
         for collector in pcp_threads:
 
@@ -65,7 +66,8 @@ def summarize(config, pcp_threads):
         dt_parts = str(list(timestamps)[0]).split()
         gw_stats.timestamp = dt_parts[3]
     else:
-        # FIXME - likely data issue, since timestamps across threads are different
+        # FIXME - if this happens a lot the threads are getting out of step
+        # FIXME - could be systems are busy, or system clocks are out of sync
         gw_stats.timestamp = "Time Skew"
 
     return gw_stats, dev_stats

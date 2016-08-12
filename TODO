@@ -17,7 +17,12 @@
   -i ... refresh interval ... DONE
   -d ... debug PENDING
   -p ... rbd pool name containing lrbd.conf (default = rbd)
-
+- change the metrics routine to try disk.dev for rbd devices, if not there fallback to disk.partitions
+  (NathanS suggestion)
+- integrate directly with rtslib for mapped disk information
+- switch to device correlation based on image name not device id
+- resize columns in the output to accomodate latencies of several secs (9999.9 ms)
+- add cpu wait metric from the gateways as a metric for i/o delays from ceph
 
 
 Known BUGS

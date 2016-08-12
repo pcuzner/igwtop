@@ -115,8 +115,11 @@ class PCPextract(pmcc.MetricGroupPrinter):
         p_k_idle = float(self.prevVals(group, 'kernel.all.cpu.idle')[''])
         cpu_multiplier = self.metrics.interval * 1000
         self.metrics.timestamp = timestamp
-        self.metrics.cpu_idle_pct = 100 * (float(c_k_idle - p_k_idle) / (num_cpus * cpu_multiplier))
-        self.metrics.cpu_busy_pct = 100 - float(self.metrics.cpu_idle_pct)
+        idle = 100 * (float(c_k_idle - p_k_idle) / (num_cpus * cpu_multiplier))
+        self.metrics.cpu_idle_pct = idle if idle >= 0 else 0
+        busy = 100 - float(self.metrics.cpu_idle_pct)
+        self.metrics.cpu_busy_pct = busy if busy >= 0 else 0
+
 
         # TODO : restrict this to only rbd devices...
         try:

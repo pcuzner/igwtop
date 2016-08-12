@@ -5,9 +5,19 @@
 # disk objects to the caller
 import subprocess
 import json
+# import os
+import glob
+from rtslib_fb import root
+
+from config.ceph import add_rbd_maps
 
 
 def str2dict(kv_string, dict_key):
+    """ only relevant for testing on non gateway hosts
+    :param kv_string: key=value string
+    :param dict_key: key to use for the dict returned to the caller
+    :return: dict converted from the string
+    """
 
     ret_dict = {}
     members = []
@@ -30,6 +40,17 @@ def get_device_info():
         query the localhost for device information that can later be
         combined with the metrics returned from pcp
     """
+
+    if glob.glob('/sys/kernel/config/target/core/iblock*'):
+        return get_target_devices()
+    else:
+        return get_local_devices()
+
+
+def get_local_devices():
+    """ only relevant for testing
+    :return:
+    """
     device_blacklist = ('sr', 'vd')
     device_data = {}
     # for upstream lsblk version 2.28, it's simpler to use -J to go straight to json
@@ -47,3 +68,28 @@ def get_device_info():
         device_data[dev_name] = dev_dict
 
     return device_data
+
+
+def get_target_devices():
+    """ LIO uses the kernel's configfs feature to store and manage configuration
+        data, so use rtslib to get a list of the devices
+
+    :return: dict of dicts describing the rbd devices mapped to this system
+    """
+
+    device_data = {}
+
+    lio_root = root.RTSRoot()
+    for lun in lio_root.luns:
+        image_name = lun.storage_object.name
+        image_size = lun.storage_object.size
+        wwn = lun.storage_object.wwn
+        dev_path = lun.storage_object.udev_path     # /dev/rbdX
+        dev_id = dev_path.split('/')[2]             # rbdX
+        device_data[dev_id] = {"size": image_size, "wwn": wwn, "image_name": image_name}
+
+    add_rbd_maps(device_data)
+
+    return device_data
+
+
