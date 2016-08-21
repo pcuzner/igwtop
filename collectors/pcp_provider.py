@@ -167,10 +167,11 @@ class PCPcollector(threading.Thread):
     """ Parent thread object which runs an instance of the pcp metric
         collector for a given host
     """
-    def __init__(self, sync_event, host='', interval='1'):
+    def __init__(self, logger, sync_event, host='', interval='1'):
         threading.Thread.__init__(self)
         self.hostname = host
         self.start_me_up = sync_event
+        self.logger = logger
 
         opts = IOstatOptions(host)
         self.context = None
@@ -195,7 +196,7 @@ class PCPcollector(threading.Thread):
 
     def run(self):
         # grab the data and store in dict every second
-        print "DEBUG - pcp manager thread started"
+        self.logger.debug("DEBUG - pcp manager thread started for host {}".format(self.hostname))
 
         self.start_me_up.wait()
         self.manager.run()
