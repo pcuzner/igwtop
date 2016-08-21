@@ -15,18 +15,19 @@
 - add debug verbosity
 - add start up cli parameters
   -i ... refresh interval ... DONE
-  -d ... debug PENDING
-  -p ... rbd pool name containing lrbd.conf (default = rbd)
+  -d ... debug ... DONE
+  -p ... rbd pool name containing gateway.conf (default = rbd)
 - change the metrics routine to try disk.dev for rbd devices, if not there fallback to disk.partitions
   (NathanS suggestion)
-- integrate directly with rtslib for mapped disk information
+- integrate directly with rtslib for mapped disk information .. done
 - switch to device correlation based on image name not device id
 - resize columns in the output to accomodate latencies of several secs (9999.9 ms)
 - add cpu wait metric from the gateways as a metric for i/o delays from ceph
-
+- act on time skew detection - maybe attempt to hold the threads and resync again using the event system?
 
 Known BUGS
 - summarize process currently assumes all threads are at the same timestamp for aggregation
+- network and cpu stats are not aggregating correctly
 - if a pmcd instance goes down during the run you get an error(pmFetch: IPC protocol failure
 ), reported but the tool continues - no indication to gateway count at all.
 
