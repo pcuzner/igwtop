@@ -42,7 +42,7 @@ def get_device_info():
     """
 
     if glob.glob('/sys/kernel/config/target/core/iblock*'):
-        return get_target_devices()
+        return get_lio_devices()
     else:
         return get_local_devices()
 
@@ -70,7 +70,7 @@ def get_local_devices():
     return device_data
 
 
-def get_target_devices():
+def get_lio_devices():
     """ LIO uses the kernel's configfs feature to store and manage configuration
         data, so use rtslib to get a list of the devices
 
