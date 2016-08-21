@@ -42,7 +42,7 @@ class TextMode(threading.Thread):
             if devname in self.config.gateway_config.diskmap:
                 client = self.config.gateway_config.diskmap[devname]
             else:
-                client = 'Unknown'
+                client = ''
 
             print("{:^6}  {:<16}   {:>4}   {:>5}   {:>5}   {:>6.2f}    {:>6.2f}   {:>6.2f}   {:>6.2f}   "
                   "{:>6.2f}  {:<20}".format(devname,
