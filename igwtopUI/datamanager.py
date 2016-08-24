@@ -1,16 +1,27 @@
 #!/usr/bin/env python
 __author__ = 'paul'
 
-from time import localtime,strftime
+from time import localtime,strftime,sleep
 
 from config.generic import DiskSummary, HostSummary
 
 
 def summarize(config, pcp_threads):
     dev_stats = {}
-    timestamps = set()
     gw_stats = HostSummary()
     first_pass = True
+
+    # Attempt to sync all the threads by timestamp, before summarising
+    in_sync = False
+    while not in_sync:
+        timestamps = set()        
+        for collector in pcp_threads:
+            timestamps.add(collector.metrics.timestamp)
+        if len(timestamps) != 1:
+            # not in sync at the moment
+            sleep(0.1)
+        else:
+            in_sync = True
 
     for dev in config.devices:
 
@@ -29,12 +40,12 @@ def summarize(config, pcp_threads):
                 summary.r_await.append(collector.metrics.disk_stats[dev].r_await)
                 summary.w_await.append(collector.metrics.disk_stats[dev].w_await)
 
+            # some metrics we only gather during the first cycle through the collector
+            # threads
             if first_pass:
                 gw_stats.cpu_busy.append(collector.metrics.cpu_busy_pct)
                 gw_stats.net_in.append(collector.metrics.nic_bytes['in'])
                 gw_stats.net_out.append(collector.metrics.nic_bytes['out'])
-                if collector.metrics.timestamp is not None:
-                    timestamps.add(collector.metrics.timestamp)
 
         first_pass = False
 
@@ -55,19 +66,10 @@ def summarize(config, pcp_threads):
     gw_stats.min_cpu = min(gw_stats.cpu_busy)
     gw_stats.max_cpu = max(gw_stats.cpu_busy)
 
-    num_timestamps = len(timestamps)
-    if num_timestamps == 0:
-        # print num_timestamps
-        # first iteration - just use the current time stamp
+    dt_parts = str(list(timestamps)[0]).split()
+    if dt_parts[0] == 'None':
         gw_stats.timestamp = 'NO DATA'
-        # gw_stats.timestamp = strftime('%X',localtime())
-    elif num_timestamps == 1:
-        # all timestamps from threads are in sync
-        dt_parts = str(list(timestamps)[0]).split()
-        gw_stats.timestamp = dt_parts[3]
     else:
-        # FIXME - if this happens a lot the threads are getting out of step
-        # FIXME - could be systems are busy, or system clocks are out of sync
-        gw_stats.timestamp = "Time Skew"
+        gw_stats.timestamp = dt_parts[3]
 
     return gw_stats, dev_stats
