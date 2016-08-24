@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+
 class Config(object):
     """ simple object to hold the current configuration across the gateways
     """
@@ -7,10 +8,12 @@ class Config(object):
     def __repr__(self):
         return str(self.__dict__)
 
+
 class DiskMetrics(object):
 
     def __repr__(self):
         return str(self.__dict__)
+
 
 class HostSummary(object):
 
@@ -24,6 +27,7 @@ class HostSummary(object):
 
     def __repr__(self):
         return str(self.__dict__)
+
 
 class DiskSummary(object):
 
