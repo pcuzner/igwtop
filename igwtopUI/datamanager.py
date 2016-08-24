@@ -13,6 +13,8 @@ def summarize(config, pcp_threads):
 
     # Attempt to sync all the threads by timestamp, before summarising
     in_sync = False
+    msg_issued = False
+
     while not in_sync:
         timestamps = set()        
         for collector in pcp_threads:
@@ -20,6 +22,9 @@ def summarize(config, pcp_threads):
         if len(timestamps) != 1:
             # not in sync at the moment
             sleep(0.1)
+            if not msg_issued:
+                collector.logger.debug("\nWaiting for collectors to synchronise")
+                msg_issued = True
         else:
             in_sync = True
 
