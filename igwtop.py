@@ -2,7 +2,10 @@
 
 import argparse
 import time
+import pkgutil
 import sys
+import logging
+
 from threading import Event
 
 from collectors.pcp_provider import PCPcollector
@@ -11,10 +14,14 @@ from config.local import get_device_info
 from config.ceph import get_gateway_info
 from igwtopUI.textmode import TextMode
 
-import logging
-
 
 def main():
+
+    gw_config_pkg = pkgutil.find_loader('ceph_iscsi_gw')
+    if gw_config_pkg is None and not opts.gateways:
+        print("Unable to determine the gateways - package ceph_iscsi_gw is not installed, and "
+              "you have\nnot provided the gateway nodes names using the -g option")
+        sys.exit(12)
 
     config = Config()
     config.opts = opts
