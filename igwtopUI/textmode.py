@@ -10,6 +10,10 @@ from igwtopUI.datamanager import summarize
 
 
 class TextMode(threading.Thread):
+    """
+    Class that provides the text mode of the tool. An object of this
+    class runs as a thread
+    """
 
     def __init__(self, config, pcp_threads):
         threading.Thread.__init__(self)
@@ -37,7 +41,8 @@ class TextMode(threading.Thread):
 
         print "Device   Pool/Image        Size     r/s     w/s    rMB/s     wMB/s    await  r_await  w_await  Client"
 
-        for devname in disk_summary:
+        # Metrics shown sorted by device name by default (i.e. rbd0..rbd1..rbdX)
+        for devname in sorted(disk_summary):
 
             if devname in self.config.gateway_config.diskmap:
                 client = self.config.gateway_config.diskmap[devname]
