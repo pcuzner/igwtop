@@ -7,6 +7,14 @@ from config.generic import DiskSummary, HostSummary
 
 
 def summarize(config, pcp_threads):
+    """
+    Aggregate the data collected across each of the threads for a consolidated view
+    of performance across all iscsi gateways
+    :param config:
+    :param pcp_threads: list of PCPCollector instances
+    :return: a HostSummary object containing metrics + a dict of device metrics
+    """
+
     dev_stats = {}
     gw_stats = HostSummary()
     first_pass = True

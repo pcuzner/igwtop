@@ -19,7 +19,7 @@ class strip_py_ext(distutils.command.install_scripts.install_scripts):
 
 setup(
     name="igwtop",
-    version="0.1",
+    version="0.1a",
     description="'top' like performance tool for ceph iscsi gateway nodes",
     long_description=long_description,
     author="Paul Cuzner",

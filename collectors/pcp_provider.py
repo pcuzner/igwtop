@@ -25,9 +25,11 @@ CPU_METRICS = ['kernel.all.cpu.idle', 'kernel.all.load', 'hinv.ncpu']
 
 
 class IOstatOptions(pmapi.pmOptions):
-    """ Define the options parser object needed by the pmcc.MetricGroupManager
-        object
     """
+    Define the options parser object needed by the pmcc.MetricGroupManager
+    object
+    """
+
     def __init__(self, host):
         pmapi.pmOptions.__init__(self, "h:t:")
         self.pmSetLongOptionHost()
@@ -35,8 +37,11 @@ class IOstatOptions(pmapi.pmOptions):
 
 
 class PCPextract(pmcc.MetricGroupPrinter):
-    """ get the data, based on the pcp-iostat example code
     """
+    Class based on the pcp-iostat example code that provides disk/network and cpu metrics for the given
+    node (thread)
+    """
+
     NIC_BLACKLIST = ['lo', 'docker0']
     HDRcount = 0
 
@@ -164,9 +169,11 @@ class PCPextract(pmcc.MetricGroupPrinter):
 
 
 class PCPcollector(threading.Thread):
-    """ Parent thread object which runs an instance of the pcp metric
-        collector for a given host
     """
+    Parent thread object which runs an instance of the pcp metric
+    collector for a given host
+    """
+
     def __init__(self, logger, sync_event, host='', interval='1'):
         threading.Thread.__init__(self)
         self.hostname = host
@@ -196,7 +203,7 @@ class PCPcollector(threading.Thread):
 
     def run(self):
         # grab the data and store in dict every second
-        self.logger.debug("DEBUG - pcp manager thread started for host {}".format(self.hostname))
+        self.logger.debug("pcp manager thread started for host {}".format(self.hostname))
 
         self.start_me_up.wait()
         self.manager.run()

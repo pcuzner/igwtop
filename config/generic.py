@@ -2,20 +2,30 @@
 
 
 class Config(object):
-    """ simple object to hold the current configuration across the gateways
+    """
+    Simple object to hold the current configuration across the gateways
     """
 
     def __repr__(self):
         return str(self.__dict__)
 
 
-class DiskMetrics(object):
+class DiskMetrics(Config):
+    """
+    Simple object used to to hold disk metrics
+    """
 
-    def __repr__(self):
-        return str(self.__dict__)
+
+class GatewayMetrics(Config):
+    """
+    Simple config object
+    """
 
 
 class HostSummary(object):
+    """
+    Simple object to hold the current configuration across the gateways
+    """
 
     def __init__(self):
         self.cpu_busy = []
@@ -30,6 +40,9 @@ class HostSummary(object):
 
 
 class DiskSummary(object):
+    """
+    Class defining objects providing disk summary statistics
+    """
 
     def __init__(self):
         self.reads = []
@@ -39,12 +52,6 @@ class DiskSummary(object):
         self.await = []
         self.r_await = []
         self.w_await = []
-
-    def __repr__(self):
-        return str(self.__dict__)
-
-
-class GatewayMetrics(object):
 
     def __repr__(self):
         return str(self.__dict__)

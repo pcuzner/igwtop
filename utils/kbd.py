@@ -1,20 +1,24 @@
-__author__ = 'paul'
-import termios
-import os
-import sys
-import tty
-from select import select
-
 #!/usr/bin/python
 
+__author__ = 'pcuzner@redhat.com'
+
+# import termios
+# import os
+
 import sys
 import tty
 from select import select
 
-# from http://code.activestate.com/recipes/203830-checking-for-a-keypress-without-stop-the-execution/
+
 class NotTTYException(Exception): pass
 
+
 class TerminalFile:
+    """
+    Class implementing methods for terminal handling, allowing keyboard scanning
+    Based on http://code.activestate.com/recipes/203830-checking-for-a-keypress-without-stop-the-execution/
+    """
+
     def __init__(self, infile):
         if not infile.isatty():
             raise NotTTYException()
@@ -40,6 +44,7 @@ class TerminalFile:
         else:
             c = ''
         return c
+
 
 if __name__=="__main__":
     s = TerminalFile(sys.stdin)

@@ -3,13 +3,10 @@ __author__ = 'paul'
 
 def bytes2human(in_bytes, target_unit=None):
     """
-    Routine to convert a given number of bytes into a more human readable form
-
-    - Based on code in Mark Pilgrim's Dive Into Python book
-
-    Input  : number of bytes
-    Output : returns a MB / GB / TB value for bytes
-
+    Convert a given number of bytes into a more consumable form
+    :param in_bytes: bytes to convert (int)
+    :param target_unit: target representation MB, GB, TB etc
+    :return: string of the converted value with a suffix e.g. 5G
     """
 
     suffixes = ['K', 'M', 'G', 'T', 'P']
