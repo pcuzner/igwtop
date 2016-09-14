@@ -9,7 +9,7 @@ import json
 import glob
 from rtslib_fb import root
 
-from config.ceph import add_rbd_maps
+from config.lio import add_rbd_maps
 
 
 def str2dict(kv_string, dict_key):
@@ -44,6 +44,7 @@ def get_device_info():
     if glob.glob('/sys/kernel/config/target/core/iblock*'):
         return get_lio_devices()
     else:
+        # testing only really - should remove in the future
         return get_local_devices()
 
 
