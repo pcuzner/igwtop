@@ -5,7 +5,7 @@
 # disk objects to the caller
 import subprocess
 import json
-# import os
+import os
 import glob
 from rtslib_fb import root
 
@@ -75,7 +75,7 @@ def get_lio_devices():
     """ LIO uses the kernel's configfs feature to store and manage configuration
         data, so use rtslib to get a list of the devices
 
-    :return: dict of dicts describing the rbd devices mapped to this system
+    :return: dict of dicts describing the rbd devices mapped to LIO
     """
 
     device_data = {}
@@ -86,7 +86,11 @@ def get_lio_devices():
         image_size = lun.storage_object.size
         wwn = lun.storage_object.wwn
         dev_path = lun.storage_object.udev_path     # /dev/rbdX
-        dev_id = dev_path.split('/')[2]             # rbdX
+        if dev_path.startswith('/dev/mapper'):
+            dm_id = os.path.realpath(dev_path).split('/')[2]
+            dev_id = os.listdir(os.path.join('/sys/class/block/{}/slaves'.format(dm_id)))[0]
+        else:
+            dev_id = dev_path.split('/')[2]             # rbdX
         device_data[dev_id] = {"size": image_size, "wwn": wwn, "image_name": image_name}
 
     add_rbd_maps(device_data)
