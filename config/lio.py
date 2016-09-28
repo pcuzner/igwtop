@@ -68,7 +68,8 @@ class GatewayConfig(object):
                     else:
                         # the object exists, so try and get the gateway information
                         config_js = json.loads(config_str)
-                        self.gateways = config_js['gateways'].keys()
+                        self.gateways = [gw_key for gw_key in config_js['gateways']
+                                         if isinstance(config_js['gateways'][gw_key], dict)]
                         if not self.gateways:
                             self.error = True
 
