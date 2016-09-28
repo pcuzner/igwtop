@@ -10,6 +10,7 @@ import glob
 from rtslib_fb import root
 
 from config.lio import add_rbd_maps
+from generic import get_devid
 
 
 def str2dict(kv_string, dict_key):
@@ -85,12 +86,7 @@ def get_lio_devices():
         image_name = lun.storage_object.name
         image_size = lun.storage_object.size
         wwn = lun.storage_object.wwn
-        dev_path = lun.storage_object.udev_path     # /dev/rbdX
-        if dev_path.startswith('/dev/mapper'):
-            dm_id = os.path.realpath(dev_path).split('/')[2]
-            dev_id = os.listdir(os.path.join('/sys/class/block/{}/slaves'.format(dm_id)))[0]
-        else:
-            dev_id = dev_path.split('/')[2]             # rbdX
+        dev_id = get_devid(lun.storage_object.udev_path)
         device_data[dev_id] = {"size": image_size, "wwn": wwn, "image_name": image_name}
 
     add_rbd_maps(device_data)

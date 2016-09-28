@@ -1,5 +1,20 @@
 #!/usr/bin/env python
 
+import os
+
+def get_devid(udev_path):
+    """
+    return the device id of i.e. rbdX for a given udev path
+    """
+
+    if udev_path.startswith('/dev/mapper'):
+        dm_id = os.path.realpath(udev_path).split('/')[2]
+        dev_id = os.listdir(os.path.join('/sys/class/block/{}/slaves'.format(dm_id)))[0]
+    else:
+        dev_id = udev_path.split('/')[2]             # rbdX
+
+    return dev_id
+
 
 class Config(object):
     """

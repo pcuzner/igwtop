@@ -6,6 +6,7 @@ import json
 import rados
 from rtslib_fb import root
 # from ceph_iscsi_gw.common import Config
+from generic import get_devid
 
 CEPH_CONF = '/etc/ceph/ceph.conf'
 
@@ -88,10 +89,16 @@ class GatewayConfig(object):
 
         for m_lun in lio_root.mapped_luns:
             udev_path = m_lun.tpg_lun.storage_object.udev_path
-            dev_id = udev_path.split('/')[-1]
-            client_iqn = m_lun.node_wwn
-            suffix = ' (C)' if client_iqn in connections else ''
-            client_shortname = client_iqn.split(':')[-1]
+            dev_id = get_devid(udev_path)
+            if dev_id in map:
+                # seen this device before, so it's shared across clients
+                suffix = ""
+                client_shortname = "- multi -"
+            else:
+                client_iqn = m_lun.node_wwn
+                suffix = ' (C)' if client_iqn in connections else ''
+                client_shortname = client_iqn.split(':')[-1]
+
             map[dev_id] = client_shortname + suffix
 
         return map
